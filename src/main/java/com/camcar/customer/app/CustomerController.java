@@ -1,9 +1,11 @@
 package com.camcar.customer.app;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.camcar.customer.domain.Customers;
@@ -29,6 +31,7 @@ public class CustomerController {
     }
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
 	public boolean createCustomer(@RequestBody Customers customer) {
 		System.out.println("pase por createCustomer controller");
 		return customerService.createCustomer(customer);
