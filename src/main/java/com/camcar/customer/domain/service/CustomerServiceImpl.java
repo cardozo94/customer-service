@@ -17,7 +17,6 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public boolean createCustomer(Customers customer) {
 		boolean result = false;
-		System.out.println("pase por createCustomer service");
 		try {
 			customerRepository.save(customer);
 			result = true;
@@ -26,7 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public boolean updateCustomer() {
+	public boolean updateCustomer(int id, Customers customer) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -44,9 +43,8 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<Customers> selectAllCustomer() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Customers> selectAllCustomers() {
+		return customerRepository.findAll();
 	}
 
 }

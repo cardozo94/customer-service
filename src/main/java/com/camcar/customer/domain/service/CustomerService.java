@@ -7,9 +7,9 @@ import com.camcar.customer.domain.Customers;
 public interface CustomerService {
 	
 	boolean createCustomer(Customers customer);
-	boolean updateCustomer();
+	boolean updateCustomer(int d, Customers customer);
 	boolean deleteCustomer(int id);
 	Customers selectCustomerById(int id);
-	List<Customers> selectAllCustomer();
+	List<Customers> selectAllCustomers();
 
 }

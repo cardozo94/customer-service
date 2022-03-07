@@ -1,5 +1,7 @@
 package com.camcar.customer.app;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +35,17 @@ public class CustomerController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public boolean createCustomer(@RequestBody Customers customer) {
-		System.out.println("pase por createCustomer controller");
 		return customerService.createCustomer(customer);
+	}
+	
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.CREATED)
+	public boolean updateCustomer(@RequestBody Customers customer) {
+		return customerService.updateCustomer(1, customer);
+	}
+	
+	@RequestMapping(value = "/getall", method = RequestMethod.GET)
+	public List<Customers> getAllCustomers() {
+		return customerService.selectAllCustomers();
 	}
 }
