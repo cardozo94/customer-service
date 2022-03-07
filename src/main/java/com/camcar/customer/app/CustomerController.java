@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,8 +45,13 @@ public class CustomerController {
 		return customerService.updateCustomer(1, customer);
 	}
 	
-	@RequestMapping(value = "/getall", method = RequestMethod.GET)
+	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	public List<Customers> getAllCustomers() {
 		return customerService.selectAllCustomers();
+	}
+	
+	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+	public Customers getCustomerById(@PathVariable("id") int id) {
+		return customerService.selectCustomerById(id);
 	}
 }

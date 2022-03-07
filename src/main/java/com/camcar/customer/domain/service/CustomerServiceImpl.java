@@ -38,8 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customers selectCustomerById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return customerRepository.findById(id);
 	}
 
 	@Override
