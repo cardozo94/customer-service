@@ -26,14 +26,26 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public boolean updateCustomer(int id, Customers customer) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean result = false;
+		Customers customerData = customerRepository.findById(id);
+		if(customerData != null) {
+			customerData.setName(customer.getName());
+			customerData.setAddress(customer.getAddress());
+			customerData.setPhoneNumber(customer.getPhoneNumber());
+			customerRepository.save(customerData);
+			result = true;
+		}
+		return result;
 	}
 
 	@Override
 	public boolean deleteCustomer(int id) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean result = false;
+		try {
+			customerRepository.deleteById(id);
+			result = true;
+		}catch (Exception e) {	}
+		return result;
 	}
 
 	@Override

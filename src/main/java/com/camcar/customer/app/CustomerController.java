@@ -39,10 +39,10 @@ public class CustomerController {
 		return customerService.createCustomer(customer);
 	}
 	
-	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	@ResponseStatus(HttpStatus.CREATED)
-	public boolean updateCustomer(@RequestBody Customers customer) {
-		return customerService.updateCustomer(1, customer);
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public boolean updateCustomer(@PathVariable("id") int id, @RequestBody Customers customer) {
+		return customerService.updateCustomer(id, customer);
 	}
 	
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
@@ -53,5 +53,11 @@ public class CustomerController {
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 	public Customers getCustomerById(@PathVariable("id") int id) {
 		return customerService.selectCustomerById(id);
+	}
+	
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public boolean deleteCustomer(@PathVariable("id") int id) {
+		return customerService.deleteCustomer(id);
 	}
 }
