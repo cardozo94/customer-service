@@ -26,7 +26,7 @@ public class CustomerController {
 		System.out.println("pase por get 2");
 		
 		Customers customer = new Customers();
-		customer.setId(1);
+//		customer.setId(1);
 		customer.setName("Camilo");
 		customer.setAddress("Carrera 14 # 9 -62");
 		customer.setPhoneNumber("3105504647");
