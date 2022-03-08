@@ -1,4 +1,4 @@
-package com.camcar.customer.infrastructure;
+package com.camcar.customer.infrastructure.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.camcar.customer.domain.Customers;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customers, Integer> {
+public interface SpringDataCustomerRepository extends JpaRepository<Customers, Integer> {
 
-	Customers findById(int id);
 }

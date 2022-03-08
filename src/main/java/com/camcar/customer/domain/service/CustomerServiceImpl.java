@@ -2,17 +2,16 @@ package com.camcar.customer.domain.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.camcar.customer.domain.Customers;
-import com.camcar.customer.infrastructure.CustomerRepository;
+import com.camcar.customer.domain.repository.CustomerRepository;
 
-@Service
 public class CustomerServiceImpl implements CustomerService {
 
-	@Autowired
 	private CustomerRepository customerRepository;
+	
+	public CustomerServiceImpl(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+	}
 	
 	@Override
 	public boolean createCustomer(Customers customer) {
@@ -27,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public boolean updateCustomer(int id, Customers customer) {
 		boolean result = false;
-		Customers customerData = customerRepository.findById(id);
+		Customers customerData = customerRepository.findById(id).get();
 		if(customerData != null) {
 			customerData.setName(customer.getName());
 			customerData.setAddress(customer.getAddress());
@@ -50,7 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customers selectCustomerById(int id) {
-		return customerRepository.findById(id);
+		return customerRepository.findById(id).get();
 	}
 
 	@Override
