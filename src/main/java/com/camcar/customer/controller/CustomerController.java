@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.camcar.customer.controller.dto.CustomerRequest;
 import com.camcar.customer.model.Customer;
 import com.camcar.customer.service.CustomerService;
 
@@ -28,7 +28,7 @@ public class CustomerController {
 	@GetMapping("/test")
     public String test() {
 		
-		Customer customer = new Customer();
+		CustomerRequest customer = new CustomerRequest();
 //		customer.setId(1);
 		customer.setName("Camilo");
 		customer.setAddress("Carrera 14 # 9 -62");
