@@ -36,28 +36,28 @@ public class CustomerController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public boolean createCustomer(@RequestBody Customers customer) {
-		return customerService.createCustomer(customer);
+		return customerService.createCustomer(customer).blockingGet();
 	}
 	
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+//	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public boolean updateCustomer(@PathVariable("id") int id, @RequestBody Customers customer) {
-		return customerService.updateCustomer(id, customer);
+		return customerService.updateCustomer(id, customer).blockingGet();
 	}
 	
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	public List<Customers> getAllCustomers() {
-		return customerService.selectAllCustomers();
+		return customerService.selectAllCustomers().blockingGet();
 	}
 	
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 	public Customers getCustomerById(@PathVariable("id") int id) {
-		return customerService.selectCustomerById(id);
+		return customerService.selectCustomerById(id).blockingGet();
 	}
 	
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public boolean deleteCustomer(@PathVariable("id") int id) {
-		return customerService.deleteCustomer(id);
+		return customerService.deleteCustomer(id).blockingGet();
 	}
 }

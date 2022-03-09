@@ -28,7 +28,7 @@ public class SqlServerDbCustomerRepository implements CustomerRepository {
 
 	@Override
 	public void save(Customers customerData) {
-		customerRepository.save(customerData);		
+		customerRepository.save(customerData);
 	}
 
 	@Override
