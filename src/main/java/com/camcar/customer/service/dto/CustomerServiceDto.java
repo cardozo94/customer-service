@@ -1,4 +1,4 @@
-package com.camcar.customer.controller.dto;
+package com.camcar.customer.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerResponse {
+public class CustomerServiceDto {
 
 	private int id;
 	private String name;
 	private String address;
 	private String phoneNumber;
+	
 }

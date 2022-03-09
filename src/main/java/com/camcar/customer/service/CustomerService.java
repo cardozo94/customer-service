@@ -2,14 +2,14 @@ package com.camcar.customer.service;
 
 import java.util.List;
 
-import com.camcar.customer.model.Customer;
+import com.camcar.customer.service.dto.CustomerServiceDto;
 
 public interface CustomerService {
 
-	boolean createCustomer(Customer customer);
-	boolean updateCustomer(int d, Customer customer);
+	boolean createCustomer(CustomerServiceDto customer);
+	boolean updateCustomer(int d, CustomerServiceDto customer);
 	boolean deleteCustomer(int id);
-	Customer selectCustomerById(int id);
-	List<Customer> selectAllCustomers();
+	CustomerServiceDto selectCustomerById(int id);
+	List<CustomerServiceDto> selectAllCustomers();
 	
 }
