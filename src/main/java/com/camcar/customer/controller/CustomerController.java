@@ -19,6 +19,7 @@ import com.camcar.customer.model.Customer;
 import com.camcar.customer.service.CustomerService;
 
 @RestController
+@RequestMapping("/customer")
 public class CustomerController {
 	
 	@Autowired
@@ -35,29 +36,29 @@ public class CustomerController {
         return customer.getName();
     }
 	
-	@PostMapping("/customer")
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public boolean createCustomer(@RequestBody Customer customer) {
 		return customerService.createCustomer(customer);
 	}
 	
-	@PutMapping("/customer/{id}")
+	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public boolean updateCustomer(@PathVariable("id") int id, @RequestBody Customer customer) {
 		return customerService.updateCustomer(id, customer);
 	}
 	
-	@GetMapping("/customer")
+	@GetMapping
 	public List<Customer> getAllCustomers() {
 		return customerService.selectAllCustomers();
 	}
 	
-	@GetMapping("/customer/{id}")
+	@GetMapping("/{id}")
 	public Customer getCustomerById(@PathVariable("id") int id) {
 		return customerService.selectCustomerById(id);
 	}
 	
-	@DeleteMapping("customer/{id}")
+	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public boolean deleteCustomer(@PathVariable("id") int id) {
 		return customerService.deleteCustomer(id);
