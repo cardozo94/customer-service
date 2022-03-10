@@ -2,14 +2,14 @@ package com.camcar.customer.domain.service;
 
 import java.util.List;
 
-import com.camcar.customer.domain.Customers;
+import com.camcar.customer.domain.service.dto.CustomerServiceDto;
 
 public interface CustomerService {
 	
-	boolean createCustomer(Customers customer);
-	boolean updateCustomer(int d, Customers customer);
+	boolean createCustomer(CustomerServiceDto customer);
+	boolean updateCustomer(int d, CustomerServiceDto customer);
 	boolean deleteCustomer(int id);
-	Customers selectCustomerById(int id);
-	List<Customers> selectAllCustomers();
+	CustomerServiceDto selectCustomerById(int id);
+	List<CustomerServiceDto> selectAllCustomers();
 
 }
