@@ -32,13 +32,12 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public boolean updateCustomer(int id, CustomerServiceDto customer) {
 		boolean result = false;
-		Customer customerDataSaved = customerRepository.findById(id);
-		if (customerDataSaved != null) {
-			CustomerServiceDto customerData = mapper.map(customerDataSaved, CustomerServiceDto.class);
+		Customer customerData = customerRepository.findById(id);
+		if (customerData != null) {
 			customerData.setName(customer.getName());
 			customerData.setAddress(customer.getAddress());
 			customerData.setPhoneNumber(customer.getPhoneNumber());
-			customerRepository.save(mapper.map(customerData, Customer.class));
+			customerRepository.save(customerData);
 			result = true;
 		}
 		return result;
