@@ -2,16 +2,16 @@ package com.camcar.customer.domain.service;
 
 import java.util.List;
 
-import com.camcar.customer.domain.Customers;
+import com.camcar.customer.domain.service.dto.CustomerServiceDto;
 
 import io.reactivex.Single;
 
 public interface CustomerService {
 	
-	Single<Boolean> createCustomer(Customers customer);
-	Single<Boolean> updateCustomer(int d, Customers customer);
+	Single<Boolean> createCustomer(CustomerServiceDto customer);
+	Single<Boolean> updateCustomer(int d, CustomerServiceDto customer);
 	Single<Boolean> deleteCustomer(int id);
-	Single<Customers> selectCustomerById(int id);
-	Single<List<Customers>> selectAllCustomers();
+	Single<Object> selectCustomerById(int id);
+	Single<List<CustomerServiceDto>> selectAllCustomers();
 
 }
