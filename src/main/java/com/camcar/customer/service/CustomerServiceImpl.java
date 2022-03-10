@@ -17,7 +17,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	private CustomerRepository customerRepository;
 	private ModelMapper mapper = new ModelMapper();
-
+	
 	@Override
 	public boolean createCustomer(CustomerServiceDto customer) {
 		boolean result = false;
@@ -32,8 +32,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public boolean updateCustomer(int id, CustomerServiceDto customer) {
 		boolean result = false;
-		CustomerServiceDto customerData = mapper.map(customerRepository.findById(id), CustomerServiceDto.class);
-		if (customerData != null) {
+		Customer customerDataSaved = customerRepository.findById(id);
+		if (customerDataSaved != null) {
+			CustomerServiceDto customerData = mapper.map(customerDataSaved, CustomerServiceDto.class);
 			customerData.setName(customer.getName());
 			customerData.setAddress(customer.getAddress());
 			customerData.setPhoneNumber(customer.getPhoneNumber());
@@ -56,7 +57,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public CustomerServiceDto selectCustomerById(int id) {
-		return mapper.map(customerRepository.findById(id), CustomerServiceDto.class);
+		Customer customerRepo = customerRepository.findById(id);
+		CustomerServiceDto customer; 
+		if(customerRepo!=null)
+			customer = mapper.map(customerRepo, CustomerServiceDto.class);
+		else
+			customer = new CustomerServiceDto(0,"Not found","-","-");
+		return customer;
 	}
 
 	@Override
