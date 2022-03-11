@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
+//import org.modelmapper.ModelMapper;
 
 import com.camcar.customer.domain.Customers;
 import com.camcar.customer.domain.repository.CustomerRepository;
+import com.camcar.customer.domain.service.converters.CustomerConverter;
+import com.camcar.customer.domain.service.converters.CustomerServiceConverter;
 import com.camcar.customer.domain.service.dto.CustomerServiceDto;
 
 import io.reactivex.Single;
@@ -15,17 +17,21 @@ import io.reactivex.Single;
 public class CustomerServiceImpl implements CustomerService {
 
 	private CustomerRepository customerRepository;
-	private ModelMapper mapper;
+//	private ModelMapper mapper = new ModelMapper();
+	private CustomerServiceConverter converterToCustomerService;
+	private CustomerConverter conterterToCustomer;
 
 	public CustomerServiceImpl(CustomerRepository customerRepository) {
 		this.customerRepository = customerRepository;
-		mapper = new ModelMapper();
+//		mapper = new ModelMapper();
+		converterToCustomerService = new CustomerServiceConverter();
+		conterterToCustomer = new CustomerConverter();
 	}
 
 	@Override
 	public Single<Boolean> createCustomer(CustomerServiceDto customer) {
 		return Single.create(single -> {
-			customerRepository.save(mapper.map(customer, Customers.class));
+			customerRepository.save(conterterToCustomer.convert(customer));
 			single.onSuccess(true);
 		});
 	}
@@ -58,7 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Single<CustomerServiceDto> selectCustomerById(int id) {
 		return Single.<CustomerServiceDto>create(single -> {
-			CustomerServiceDto customer = mapper.map(customerRepository.findById(id).get(), CustomerServiceDto.class);
+			CustomerServiceDto customer = converterToCustomerService.convert(customerRepository.findById(id).get());
 			single.onSuccess(customer);
 		}).onErrorReturn(error -> new CustomerServiceDto(0, "not Found", "-", "-"));
 	}
@@ -67,7 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public Single<List<CustomerServiceDto>> selectAllCustomers() {
 		return Single.create(single -> {
 			List<CustomerServiceDto> customers = customerRepository.findAll().stream()
-					.map(customer -> mapper.map(customer, CustomerServiceDto.class)).collect(Collectors.toList());
+					.map(customer -> converterToCustomerService.convert(customer)).collect(Collectors.toList());
 			single.onSuccess(customers);
 		});
 	}
