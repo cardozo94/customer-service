@@ -49,10 +49,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Single<Boolean> deleteCustomer(int id) {
-		return Single.create(single -> {
+		return Single.<Boolean>create(single -> {
 			customerRepository.deleteById(id);
 			single.onSuccess(true);
-		});
+		}).onErrorReturn(error -> false);
 	}
 
 	@Override
