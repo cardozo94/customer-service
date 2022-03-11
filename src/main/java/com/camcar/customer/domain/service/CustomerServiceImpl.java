@@ -3,11 +3,13 @@ package com.camcar.customer.domain.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
+//import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.camcar.customer.domain.Customers;
+import com.camcar.customer.domain.service.converters.CustomerConverter;
+import com.camcar.customer.domain.service.converters.CustomerServiceConverter;
 import com.camcar.customer.domain.service.dto.CustomerServiceDto;
 import com.camcar.customer.infrastructure.CustomerRepository;
 
@@ -16,13 +18,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CustomerRepository customerRepository;
-	private ModelMapper mapper = new ModelMapper();
+//	private ModelMapper mapper = new ModelMapper();
+	private CustomerServiceConverter converterToCustomerService = new CustomerServiceConverter();
+	private CustomerConverter conterterToCustomer = new CustomerConverter();
 
 	@Override
 	public boolean createCustomer(CustomerServiceDto customer) {
 		boolean result = false;
 		try {
-			customerRepository.save(mapper.map(customer, Customers.class));
+			customerRepository.save(conterterToCustomer.convert(customer));
 			result = true;
 		} catch (IllegalArgumentException e) {
 		}
@@ -59,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Customers customerRepo = customerRepository.findById(id);
 		CustomerServiceDto customer;
 		if (customerRepo != null)
-			customer = mapper.map(customerRepository.findById(id), CustomerServiceDto.class);
+			customer = converterToCustomerService.convert(customerRepository.findById(id));
 		else
 			customer = new CustomerServiceDto(0, "Not found", "-", "-");
 
@@ -68,7 +72,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<CustomerServiceDto> selectAllCustomers() {
-		return customerRepository.findAll().stream().map(customer -> mapper.map(customer, CustomerServiceDto.class))
+		return customerRepository.findAll().stream().map(customer -> converterToCustomerService.convert(customer))
 				.collect(Collectors.toList());
 	}
 
