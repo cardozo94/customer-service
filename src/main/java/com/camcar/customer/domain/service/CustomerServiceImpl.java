@@ -37,7 +37,6 @@ public class CustomerServiceImpl implements CustomerService {
 			customerData.setName(customer.getName());
 			customerData.setAddress(customer.getAddress());
 			customerData.setPhoneNumber(customer.getPhoneNumber());
-			System.out.println(customerData.getId());
 			customerRepository.save(customerData);
 			result = true;
 		}
@@ -59,11 +58,11 @@ public class CustomerServiceImpl implements CustomerService {
 	public CustomerServiceDto selectCustomerById(int id) {
 		Customers customerRepo = customerRepository.findById(id);
 		CustomerServiceDto customer;
-		if(customerRepo != null) 
+		if (customerRepo != null)
 			customer = mapper.map(customerRepository.findById(id), CustomerServiceDto.class);
-		else 
+		else
 			customer = new CustomerServiceDto(0, "Not found", "-", "-");
-		
+
 		return customer;
 	}
 
