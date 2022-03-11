@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.camcar.customer.controller.dto.CustomerRequest;
 import com.camcar.customer.controller.dto.CustomerResponse;
@@ -48,8 +49,9 @@ public class CustomerController {
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public boolean updateCustomer(@PathVariable("id") int id, @RequestBody CustomerRequest customerReq) {
-		return customerService.updateCustomer(id, this.mapper.map(customerReq, CustomerServiceDto.class));
+	public void updateCustomer(@PathVariable("id") int id, @RequestBody CustomerRequest customerReq) {
+		if(!customerService.updateCustomer(id, this.mapper.map(customerReq, CustomerServiceDto.class)))
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
 	}
 
 	@GetMapping
@@ -60,12 +62,16 @@ public class CustomerController {
 
 	@GetMapping("/{id}")
 	public CustomerResponse getCustomerById(@PathVariable("id") int id) {
-		return this.mapper.map(customerService.selectCustomerById(id), CustomerResponse.class);
+		CustomerResponse customer = this.mapper.map(customerService.selectCustomerById(id), CustomerResponse.class);
+		if(customer.getId() == 0)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
+		return customer;
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public boolean deleteCustomer(@PathVariable("id") int id) {
-		return customerService.deleteCustomer(id);
+	public void deleteCustomer(@PathVariable("id") int id) {
+		if(!customerService.deleteCustomer(id))
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
 	}
 }

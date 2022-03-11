@@ -49,8 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 			customerRepository.deleteById(id);
 			result = true;
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {	}
 		return result;
 	}
 
