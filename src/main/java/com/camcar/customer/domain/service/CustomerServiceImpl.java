@@ -5,27 +5,33 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
+//import org.modelmapper.ModelMapper;
 
 import com.camcar.customer.domain.Customers;
 import com.camcar.customer.domain.repository.CustomerRepository;
+import com.camcar.customer.domain.service.converters.CustomerConverter;
+import com.camcar.customer.domain.service.converters.CustomerServiceConverter;
 import com.camcar.customer.domain.service.dto.CustomerServiceDto;
 
 public class CustomerServiceImpl implements CustomerService {
 
 	private CustomerRepository customerRepository;
-	private ModelMapper mapper;
+//	private ModelMapper mapper = new ModelMapper();
+	private CustomerServiceConverter converterToCustomerService;
+	private CustomerConverter conterterToCustomer;
 
 	public CustomerServiceImpl(CustomerRepository customerRepository) {
 		this.customerRepository = customerRepository;
-		mapper = new ModelMapper();
+//		mapper = new ModelMapper();
+		converterToCustomerService = new CustomerServiceConverter();
+		conterterToCustomer = new CustomerConverter();
 	}
 
 	@Override
 	public boolean createCustomer(CustomerServiceDto customer) {
 		boolean result = false;
 		try {
-			customerRepository.save(mapper.map(customer, Customers.class));
+			customerRepository.save(conterterToCustomer.convert(customer));
 			result = true;
 		} catch (IllegalArgumentException e) {
 		}
@@ -62,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public CustomerServiceDto selectCustomerById(int id) {
 		CustomerServiceDto customer;
 		try {
-			customer = mapper.map(customerRepository.findById(id).get(), CustomerServiceDto.class);
+			customer = converterToCustomerService.convert(customerRepository.findById(id).get());
 		}catch (NoSuchElementException e) {
 			customer = new CustomerServiceDto(0, "Not Found", "-", "-");
 		}
@@ -71,7 +77,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<CustomerServiceDto> selectAllCustomers() {
-		return customerRepository.findAll().stream().map(customer -> mapper.map(customer, CustomerServiceDto.class))
+		return customerRepository.findAll().stream().map(customer -> converterToCustomerService.convert(customer))
 				.collect(Collectors.toList());
 	}
 
