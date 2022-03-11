@@ -23,7 +23,7 @@ import com.camcar.customer.app.dto.CustomerRequest;
 import com.camcar.customer.app.dto.CustomerResponse;
 import com.camcar.customer.domain.Customers;
 import com.camcar.customer.domain.service.CustomerService;
-import com.camcar.customer.domain.service.dto.CustomerServiceDto;
+//import com.camcar.customer.domain.service.dto.CustomerServiceDto;
 
 @RestController
 @RequestMapping("/customer")
