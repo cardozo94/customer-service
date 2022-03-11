@@ -54,8 +54,8 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Single<Object> selectCustomerById(int id) {
-		return Single.create(single -> {
+	public Single<CustomerServiceDto> selectCustomerById(int id) {
+		return Single.<CustomerServiceDto>create(single -> {
 			CustomerServiceDto customer = mapper.map(customerRepository.findById(id).get(), CustomerServiceDto.class);
 			single.onSuccess(customer);
 		}).onErrorReturn(error -> new CustomerServiceDto(0, "not Found", "-", "-"));

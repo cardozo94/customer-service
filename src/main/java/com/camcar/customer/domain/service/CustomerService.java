@@ -11,7 +11,7 @@ public interface CustomerService {
 	Single<Boolean> createCustomer(CustomerServiceDto customer);
 	Single<Boolean> updateCustomer(int d, CustomerServiceDto customer);
 	Single<Boolean> deleteCustomer(int id);
-	Single<Object> selectCustomerById(int id);
+	Single<CustomerServiceDto> selectCustomerById(int id);
 	Single<List<CustomerServiceDto>> selectAllCustomers();
 
 }
