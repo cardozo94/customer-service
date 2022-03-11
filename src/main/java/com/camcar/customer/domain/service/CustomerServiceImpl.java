@@ -1,6 +1,7 @@
 package com.camcar.customer.domain.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -32,8 +33,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Single<Boolean> updateCustomer(int id, CustomerServiceDto customer) {
 		return Single.create(single -> {
-			Customers customerData = customerRepository.findById(id).get();
-			if (customerData != null) {
+			Optional<Customers> customerRepo = customerRepository.findById(id);
+			if (!customerRepo.isEmpty()) {
+				Customers customerData = customerRepo.get();
 				customerData.setName(customer.getName());
 				customerData.setAddress(customer.getAddress());
 				customerData.setPhoneNumber(customer.getPhoneNumber());
