@@ -3,12 +3,14 @@ package com.camcar.customer.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
+//import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.camcar.customer.model.Customer;
 import com.camcar.customer.repository.CustomerRepository;
+import com.camcar.customer.service.converters.CustomerConverter;
+import com.camcar.customer.service.converters.CustomerServiceConverter;
 import com.camcar.customer.service.dto.CustomerServiceDto;
 
 @Service
@@ -16,13 +18,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CustomerRepository customerRepository;
-	private ModelMapper mapper = new ModelMapper();
-	
+//	private ModelMapper mapper = new ModelMapper();
+	private CustomerServiceConverter converterToCustomerService = new CustomerServiceConverter();
+	private CustomerConverter conterterToCustomer = new CustomerConverter();
+
 	@Override
 	public boolean createCustomer(CustomerServiceDto customer) {
 		boolean result = false;
 		try {
-			customerRepository.save(mapper.map(customer, Customer.class));
+			customerRepository.save(conterterToCustomer.convert(customer));
 			result = true;
 		} catch (IllegalArgumentException e) {
 		}
@@ -49,24 +53,25 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 			customerRepository.deleteById(id);
 			result = true;
-		} catch (Exception e) {	}
+		} catch (Exception e) {
+		}
 		return result;
 	}
 
 	@Override
 	public CustomerServiceDto selectCustomerById(int id) {
 		Customer customerRepo = customerRepository.findById(id);
-		CustomerServiceDto customer; 
-		if(customerRepo!=null)
-			customer = mapper.map(customerRepo, CustomerServiceDto.class);
+		CustomerServiceDto customer;
+		if (customerRepo != null)
+			customer = converterToCustomerService.convert(customerRepo);
 		else
-			customer = new CustomerServiceDto(0,"Not found","-","-");
+			customer = new CustomerServiceDto(0, "Not found", "-", "-");
 		return customer;
 	}
 
 	@Override
 	public List<CustomerServiceDto> selectAllCustomers() {
-		return customerRepository.findAll().stream().map(customer -> mapper.map(customer, CustomerServiceDto.class))
+		return customerRepository.findAll().stream().map(customer -> converterToCustomerService.convert(customer))
 				.collect(Collectors.toList());
 	}
 
