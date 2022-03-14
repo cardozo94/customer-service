@@ -31,7 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Single<Boolean> createCustomer(CustomerServiceDto customer) {
 		return Single.create(single -> {
-			customerRepository.save(conterterToCustomer.convert(customer));
+			customerRepository.insert(conterterToCustomer.convert(customer));
 			single.onSuccess(true);
 		});
 	}
@@ -45,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
 				customerData.setName(customer.getName());
 				customerData.setAddress(customer.getAddress());
 				customerData.setPhoneNumber(customer.getPhoneNumber());
-				customerRepository.save(customerData);
+				customerRepository.update(customerData);
 				single.onSuccess(true);
 			} else {
 				single.onSuccess(false);

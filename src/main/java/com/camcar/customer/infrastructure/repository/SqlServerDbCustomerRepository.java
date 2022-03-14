@@ -23,22 +23,26 @@ public class SqlServerDbCustomerRepository implements CustomerRepository {
 
 	@Override
 	public Optional<Customers> findById(int id) {
-		return customerRepository.findById(id);
+		return Optional.ofNullable(customerRepository.findById(id));
 	}
 
-	@Override
-	public void save(Customers customerData) {
-		customerRepository.save(customerData);
+	public void insert(Customers customerData) {
+		customerRepository.insertCustomer(customerData);
 	}
 
 	@Override
 	public void deleteById(int id) {
-		customerRepository.deleteById(id);		
+		customerRepository.deleteCustomer(id);		
 	}
 
 	@Override
 	public List<Customers> findAll() {
-		return customerRepository.findAll();
+		return customerRepository.selectAllCustomers();
+	}
+
+	@Override
+	public void update(Customers customerData) {
+		customerRepository.updateCustomer(customerData);		
 	}
 
 }
