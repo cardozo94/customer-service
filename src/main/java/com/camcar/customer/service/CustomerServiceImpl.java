@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.camcar.customer.model.Customer;
 import com.camcar.customer.repository.CustomerRepository;
-import com.camcar.customer.service.converters.CustomerConverter;
+//import com.camcar.customer.service.converters.CustomerConverter;
 import com.camcar.customer.service.converters.CustomerServiceConverter;
 import com.camcar.customer.service.dto.CustomerServiceDto;
 
@@ -20,13 +20,13 @@ public class CustomerServiceImpl implements CustomerService {
 	private CustomerRepository customerRepository;
 //	private ModelMapper mapper = new ModelMapper();
 	private CustomerServiceConverter converterToCustomerService = new CustomerServiceConverter();
-	private CustomerConverter conterterToCustomer = new CustomerConverter();
+//	private CustomerConverter conterterToCustomer = new CustomerConverter();
 
 	@Override
 	public boolean createCustomer(CustomerServiceDto customer) {
 		boolean result = false;
 		try {
-			customerRepository.save(conterterToCustomer.convert(customer));
+			customerRepository.insertCustomer(customer.getName(), customer.getAddress(), customer.getPhoneNumber());
 			result = true;
 		} catch (IllegalArgumentException e) {
 		}
@@ -38,10 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
 		boolean result = false;
 		Customer customerData = customerRepository.findById(id);
 		if (customerData != null) {
-			customerData.setName(customer.getName());
-			customerData.setAddress(customer.getAddress());
-			customerData.setPhoneNumber(customer.getPhoneNumber());
-			customerRepository.save(customerData);
+			customerRepository.updateCustomer(id, customer.getName(), customer.getAddress(), customer.getPhoneNumber());
 			result = true;
 		}
 		return result;
@@ -51,9 +48,10 @@ public class CustomerServiceImpl implements CustomerService {
 	public boolean deleteCustomer(int id) {
 		boolean result = false;
 		try {
-			customerRepository.deleteById(id);
+			customerRepository.deleteCustomer(id);
 			result = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return result;
 	}
@@ -71,8 +69,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<CustomerServiceDto> selectAllCustomers() {
-		return customerRepository.findAll().stream().map(customer -> converterToCustomerService.convert(customer))
-				.collect(Collectors.toList());
+		return customerRepository.selectAllCustomers().stream()
+				.map(customer -> converterToCustomerService.convert(customer)).collect(Collectors.toList());
 	}
 
 }
