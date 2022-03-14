@@ -31,7 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public boolean createCustomer(CustomerServiceDto customer) {
 		boolean result = false;
 		try {
-			customerRepository.save(conterterToCustomer.convert(customer));
+			customerRepository.insert(conterterToCustomer.convert(customer));
 			result = true;
 		} catch (IllegalArgumentException e) {
 		}
@@ -47,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customerData.setName(customer.getName());
 			customerData.setAddress(customer.getAddress());
 			customerData.setPhoneNumber(customer.getPhoneNumber());
-			customerRepository.save(customerData);
+			customerRepository.update(customerData);
 			result = true;
 		}
 		return result;
@@ -77,8 +77,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<CustomerServiceDto> selectAllCustomers() {
-		return customerRepository.findAll().stream().map(customer -> converterToCustomerService.convert(customer))
-				.collect(Collectors.toList());
+		return customerRepository.findAll().stream()
+				.map(customer -> converterToCustomerService.convert(customer)).collect(Collectors.toList());
 	}
 
 }

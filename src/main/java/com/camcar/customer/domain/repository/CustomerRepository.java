@@ -9,7 +9,9 @@ public interface CustomerRepository{
 
 	Optional<Customers> findById(int id);
 
-	void save(Customers customerData);
+	void insert(Customers customerData);
+	
+	void update(Customers customerData);
 
 	void deleteById(int id);
 
