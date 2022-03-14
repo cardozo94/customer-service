@@ -16,16 +16,14 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query(value = "INSERT INTO customers (name, address, phone_number) VALUES (:name, :address, :phoneNumber)", nativeQuery = true)
-	void insertCustomer(@Param("name") String name, @Param("address") String address,
-			@Param("phoneNumber") String phoneNumber);
-	
+	@Query(value = "INSERT INTO customers (name, address, phone_number) VALUES (:#{#customer.name}, :#{#customer.address}, :#{#customer.phoneNumber})", nativeQuery = true)
+	void insertCustomer(@Param("customer") Customer customer);
+
 	@Transactional
 	@Modifying
-	@Query("UPDATE customers SET name = :name, address = :address, phone_number = :phoneNumber WHERE id = :id")
-	void updateCustomer(@Param("id") int id, @Param("name") String name, @Param("address") String address,
-			@Param("phoneNumber") String phoneNumber);
-	
+	@Query("UPDATE customers SET name = :#{#customer.name}, address = :#{#customer.address}, phone_number = :#{#customer.phoneNumber} WHERE id = :#{#customer.id}")
+	void updateCustomer(@Param("customer") Customer customer);
+
 	@Transactional
 	@Modifying
 	@Query(value = "DELETE FROM customers WHERE id = :id", nativeQuery = true)
@@ -33,7 +31,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
 	@Query(value = "SELECT * FROM customers WHERE id = :id", nativeQuery = true)
 	Customer findById(@Param("id") int id);
-	
+
 	@Query("SELECT c FROM customers c")
 	List<Customer> selectAllCustomers();
 }

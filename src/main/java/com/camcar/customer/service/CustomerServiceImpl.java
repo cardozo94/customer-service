@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.camcar.customer.model.Customer;
 import com.camcar.customer.repository.CustomerRepository;
-//import com.camcar.customer.service.converters.CustomerConverter;
+import com.camcar.customer.service.converters.CustomerConverter;
 import com.camcar.customer.service.converters.CustomerServiceConverter;
 import com.camcar.customer.service.dto.CustomerServiceDto;
 
@@ -20,13 +20,13 @@ public class CustomerServiceImpl implements CustomerService {
 	private CustomerRepository customerRepository;
 //	private ModelMapper mapper = new ModelMapper();
 	private CustomerServiceConverter converterToCustomerService = new CustomerServiceConverter();
-//	private CustomerConverter conterterToCustomer = new CustomerConverter();
+	private CustomerConverter conterterToCustomer = new CustomerConverter();
 
 	@Override
 	public boolean createCustomer(CustomerServiceDto customer) {
 		boolean result = false;
 		try {
-			customerRepository.insertCustomer(customer.getName(), customer.getAddress(), customer.getPhoneNumber());
+			customerRepository.insertCustomer(conterterToCustomer.convert(customer));
 			result = true;
 		} catch (IllegalArgumentException e) {
 		}
@@ -38,7 +38,10 @@ public class CustomerServiceImpl implements CustomerService {
 		boolean result = false;
 		Customer customerData = customerRepository.findById(id);
 		if (customerData != null) {
-			customerRepository.updateCustomer(id, customer.getName(), customer.getAddress(), customer.getPhoneNumber());
+			customerData.setName(customer.getName());
+			customerData.setAddress(customer.getAddress());
+			customerData.setPhoneNumber(customer.getPhoneNumber());
+			customerRepository.updateCustomer(customerData);
 			result = true;
 		}
 		return result;
