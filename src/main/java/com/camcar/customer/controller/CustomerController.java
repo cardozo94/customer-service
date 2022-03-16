@@ -21,15 +21,16 @@ import com.camcar.customer.controller.converters.CustomerRequestConverter;
 import com.camcar.customer.controller.converters.CustomerResponseConverter;
 import com.camcar.customer.controller.dto.CustomerRequest;
 import com.camcar.customer.controller.dto.CustomerResponse;
-import com.camcar.customer.service.CustomerService;
-//import com.camcar.customer.service.dto.CustomerServiceDto;
+import com.camcar.customer.service.CustomerServiceImpl;
+import com.camcar.customer.service.ServiceDefinition;
+import com.camcar.customer.service.dto.CustomerServiceData;
 
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
 
 	@Autowired
-	private CustomerService customerService;
+	private ServiceDefinition<CustomerServiceData> customerService;
 //	private ModelMapper mapper = new ModelMapper();
 	private CustomerRequestConverter converterReq = new CustomerRequestConverter();
 	private CustomerResponseConverter converterRsp = new CustomerResponseConverter();
@@ -48,25 +49,25 @@ public class CustomerController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public boolean createCustomer(@RequestBody CustomerRequest customerReq) {
-		return customerService.createCustomer(converterReq.convert(customerReq));
+		return customerService.create(converterReq.convert(customerReq));
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updateCustomer(@PathVariable("id") int id, @RequestBody CustomerRequest customerReq) {
-		if (!customerService.updateCustomer(id, converterReq.convert(customerReq)))
+		if (!customerService.update(id, converterReq.convert(customerReq)))
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
 	}
 
 	@GetMapping
 	public List<CustomerResponse> getAllCustomers() {
-		return customerService.selectAllCustomers().stream().map(customer -> converterRsp.convert(customer))
+		return customerService.selectAll().stream().map(customer -> converterRsp.convert(customer))
 				.collect(Collectors.toList());
 	}
 
 	@GetMapping("/{id}")
 	public CustomerResponse getCustomerById(@PathVariable("id") int id) {
-		CustomerResponse customer = converterRsp.convert(customerService.selectCustomerById(id));
+		CustomerResponse customer = converterRsp.convert(customerService.selectById(id));
 		if (customer.getId() == 0)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
 		return customer;
@@ -75,7 +76,18 @@ public class CustomerController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteCustomer(@PathVariable("id") int id) {
-		if (!customerService.deleteCustomer(id))
+		if (!customerService.delete(id))
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
+	}
+
+	@GetMapping("/full")
+	public List<CustomerResponse> getAllCustomersInfo() {
+		return ((CustomerServiceImpl) customerService).selectAllInfoFromAllCustomers().stream()
+				.map(customer -> converterRsp.convert(customer)).toList();
+	}
+
+	@GetMapping("/full/{id}")
+	public CustomerResponse getAllInfoCustomer(@PathVariable("id") int id) {
+		return converterRsp.convert(((CustomerServiceImpl) customerService).selectAllInfoCustomer(id));
 	}
 }

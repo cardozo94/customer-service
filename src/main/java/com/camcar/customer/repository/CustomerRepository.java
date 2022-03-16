@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.camcar.customer.model.Customer;
+import com.camcar.customer.repository.dto.CustomerDocumentData;
 
 //@Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
@@ -34,4 +35,10 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
 	@Query("SELECT c FROM customers c")
 	List<Customer> selectAllCustomers();
+	
+	@Query("SELECT new com.camcar.customer.repository.dto.CustomerDocumentData(c, d) FROM documents d RIGHT JOIN d.customer c")
+	List<CustomerDocumentData> selectAllInfoForAllCustomers();
+	
+	@Query("SELECT new com.camcar.customer.repository.dto.CustomerDocumentData(c, d) FROM documents d RIGHT JOIN d.customer c WHERE c.id = :id")
+	CustomerDocumentData findByIdAllInfoCustomer(@Param("id") int id);
 }

@@ -3,14 +3,19 @@ package com.camcar.customer.service.converters;
 import org.springframework.core.convert.converter.Converter;
 
 import com.camcar.customer.model.Customer;
-import com.camcar.customer.service.dto.CustomerServiceDto;
+import com.camcar.customer.service.dto.CustomerServiceData;
 
-public class CustomerServiceConverter implements Converter<Customer, CustomerServiceDto> {
+public class CustomerServiceConverter implements Converter<Customer, CustomerServiceData> {
 
 	@Override
-	public CustomerServiceDto convert(Customer customerSource) {
-		return new CustomerServiceDto(customerSource.getId(), customerSource.getName(), customerSource.getAddress(),
-				customerSource.getPhoneNumber());
+	public CustomerServiceData convert(Customer customerSource) {
+		CustomerServiceData customer = new CustomerServiceData();
+		customer.setId(customerSource.getId());
+		customer.setName(customerSource.getName());
+		customer.setAddress(customerSource.getAddress());
+		customer.setPhoneNumber(customerSource.getPhoneNumber());
+		return customer;
 	}
+	
 
 }

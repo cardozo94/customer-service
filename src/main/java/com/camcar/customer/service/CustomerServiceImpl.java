@@ -11,19 +11,21 @@ import com.camcar.customer.model.Customer;
 import com.camcar.customer.repository.CustomerRepository;
 import com.camcar.customer.service.converters.CustomerConverter;
 import com.camcar.customer.service.converters.CustomerServiceConverter;
-import com.camcar.customer.service.dto.CustomerServiceDto;
+import com.camcar.customer.service.converters.DocumentToCustomerConverter;
+import com.camcar.customer.service.dto.CustomerServiceData;
 
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceData> {
 
 	@Autowired
 	private CustomerRepository customerRepository;
 //	private ModelMapper mapper = new ModelMapper();
 	private CustomerServiceConverter converterToCustomerService = new CustomerServiceConverter();
 	private CustomerConverter conterterToCustomer = new CustomerConverter();
+	private DocumentToCustomerConverter converterFromDocument = new DocumentToCustomerConverter();
 
 	@Override
-	public boolean createCustomer(CustomerServiceDto customer) {
+	public boolean create(CustomerServiceData customer) {
 		boolean result = false;
 		try {
 			customerRepository.insertCustomer(conterterToCustomer.convert(customer));
@@ -34,7 +36,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public boolean updateCustomer(int id, CustomerServiceDto customer) {
+	public boolean update(int id, CustomerServiceData customer) {
 		boolean result = false;
 		Customer customerData = customerRepository.findById(id);
 		if (customerData != null) {
@@ -48,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public boolean deleteCustomer(int id) {
+	public boolean delete(int id) {
 		boolean result = false;
 		try {
 			customerRepository.deleteCustomer(id);
@@ -60,20 +62,29 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public CustomerServiceDto selectCustomerById(int id) {
+	public CustomerServiceData selectById(int id) {
 		Customer customerRepo = customerRepository.findById(id);
-		CustomerServiceDto customer;
+		CustomerServiceData customer;
 		if (customerRepo != null)
 			customer = converterToCustomerService.convert(customerRepo);
 		else
-			customer = new CustomerServiceDto(0, "Not found", "-", "-");
+			customer = new CustomerServiceData(0, "Not found", "-", "-");
 		return customer;
 	}
 
 	@Override
-	public List<CustomerServiceDto> selectAllCustomers() {
+	public List<CustomerServiceData> selectAll() {
 		return customerRepository.selectAllCustomers().stream()
 				.map(customer -> converterToCustomerService.convert(customer)).collect(Collectors.toList());
+	}
+
+	public List<CustomerServiceData> selectAllInfoFromAllCustomers() {
+		return customerRepository.selectAllInfoForAllCustomers().stream()
+				.map(customer -> converterFromDocument.convert(customer)).toList();
+	}
+
+	public CustomerServiceData selectAllInfoCustomer(int id) {
+		return converterFromDocument.convert(customerRepository.findByIdAllInfoCustomer(id));
 	}
 
 }
