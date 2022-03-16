@@ -48,8 +48,8 @@ public class CustomerController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public boolean createCustomer(@RequestBody CustomerRequest customerReq) {
-		return customerService.create(converterReq.convert(customerReq));
+	public CustomerResponse createCustomer(@RequestBody CustomerRequest customerReq) {
+		return converterRsp.convert(customerService.create(converterReq.convert(customerReq)));
 	}
 
 	@PutMapping("/{id}")
@@ -89,5 +89,15 @@ public class CustomerController {
 	@GetMapping("/full/{id}")
 	public CustomerResponse getAllInfoCustomer(@PathVariable("id") int id) {
 		return converterRsp.convert(((CustomerServiceImpl) customerService).selectAllInfoCustomer(id));
+	}
+
+	@PostMapping("/full")
+	@ResponseStatus(HttpStatus.CREATED)
+	public CustomerResponse createCustomerWithAllInfo(@RequestBody CustomerRequest customerReq) {
+		CustomerResponse customer = converterRsp.convert(
+				((CustomerServiceImpl) customerService).insertFullInfoCustomer(converterReq.convert(customerReq)));
+		if(customer == null)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Info is not correct.");
+		return customer;
 	}
 }

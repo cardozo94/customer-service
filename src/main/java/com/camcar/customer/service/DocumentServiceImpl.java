@@ -20,12 +20,11 @@ public class DocumentServiceImpl implements ServiceDefinition<DocumentServiceDat
 	private DocumentServiceConverter converterToDocumentService = new DocumentServiceConverter();
 
 	@Override
-	public boolean create(DocumentServiceData document) {
-		boolean result = true;
+	public DocumentServiceData create(DocumentServiceData document) {
+		DocumentServiceData result = null;
 		try {
-			documentRepository.save(converterToDocument.convert(document));
+			result = converterToDocumentService.convert(documentRepository.save(converterToDocument.convert(document)));
 		} catch (IllegalArgumentException e) {
-			result = false;
 		}
 		return result;
 	}
@@ -58,13 +57,19 @@ public class DocumentServiceImpl implements ServiceDefinition<DocumentServiceDat
 	@Override
 	public DocumentServiceData selectById(int id) {
 		return converterToDocumentService.convert(documentRepository.findById(id));
-		
+
 	}
 
 	@Override
 	public List<DocumentServiceData> selectAll() {
 		return documentRepository.findAll().stream().map(document -> converterToDocumentService.convert(document))
 				.toList();
+	}
+
+	public List<DocumentServiceData> selectByCustomerId(int customerId) {
+		return documentRepository.findByCustomerId(customerId).stream()
+				.map(document -> converterToDocumentService.convert(document)).toList();
+
 	}
 
 }

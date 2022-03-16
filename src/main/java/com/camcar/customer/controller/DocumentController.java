@@ -20,6 +20,7 @@ import com.camcar.customer.controller.converters.DocumentRequestConverter;
 import com.camcar.customer.controller.converters.DocumentResponseConverter;
 import com.camcar.customer.controller.dto.DocumentRequest;
 import com.camcar.customer.controller.dto.DocumentResponse;
+import com.camcar.customer.service.DocumentServiceImpl;
 import com.camcar.customer.service.ServiceDefinition;
 import com.camcar.customer.service.dto.DocumentServiceData;
 
@@ -34,8 +35,8 @@ public class DocumentController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public boolean createDocument(@RequestBody DocumentRequest documentReq) {
-		return documentService.create(converterReq.convert(documentReq));
+	public DocumentResponse createDocument(@RequestBody DocumentRequest documentReq) {
+		return converterRsp.convert(documentService.create(converterReq.convert(documentReq)));
 	}
 
 	@PutMapping("/{id}")
@@ -64,5 +65,14 @@ public class DocumentController {
 	public void deletedocument(@PathVariable("id") int id) {
 		if (!documentService.delete(id))
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not Found");
+	}
+
+	@GetMapping("/customerId/{id}")
+	public List<DocumentResponse> getDocumentsByCustomerId(@PathVariable("id") int customerId) {
+		List<DocumentResponse> documents = ((DocumentServiceImpl) documentService).selectByCustomerId(customerId)
+				.stream().map(document -> converterRsp.convert(document)).toList();
+		if (documents.size() == 0) 
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Documents not Found");
+		return documents;
 	}
 }

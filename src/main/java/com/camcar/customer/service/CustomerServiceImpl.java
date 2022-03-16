@@ -13,23 +13,26 @@ import com.camcar.customer.service.converters.CustomerConverter;
 import com.camcar.customer.service.converters.CustomerServiceConverter;
 import com.camcar.customer.service.converters.DocumentToCustomerConverter;
 import com.camcar.customer.service.dto.CustomerServiceData;
+import com.camcar.customer.service.dto.DocumentServiceData;
 
 @Service
 public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceData> {
 
 	@Autowired
 	private CustomerRepository customerRepository;
+	@Autowired
+	private DocumentServiceImpl documentService;
 //	private ModelMapper mapper = new ModelMapper();
 	private CustomerServiceConverter converterToCustomerService = new CustomerServiceConverter();
 	private CustomerConverter conterterToCustomer = new CustomerConverter();
 	private DocumentToCustomerConverter converterFromDocument = new DocumentToCustomerConverter();
 
 	@Override
-	public boolean create(CustomerServiceData customer) {
-		boolean result = false;
+	public CustomerServiceData create(CustomerServiceData customer) {
+		CustomerServiceData result = null;
 		try {
-			customerRepository.insertCustomer(conterterToCustomer.convert(customer));
-			result = true;
+			result = converterToCustomerService.convert(customerRepository.save(conterterToCustomer.convert(customer)));
+
 		} catch (IllegalArgumentException e) {
 		}
 		return result;
@@ -53,6 +56,9 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 	public boolean delete(int id) {
 		boolean result = false;
 		try {
+			for (DocumentServiceData document : documentService.selectByCustomerId(id)) {
+				documentService.delete(document.getId());
+			}
 			customerRepository.deleteCustomer(id);
 			result = true;
 		} catch (Exception e) {
@@ -85,6 +91,24 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 
 	public CustomerServiceData selectAllInfoCustomer(int id) {
 		return converterFromDocument.convert(customerRepository.findByIdAllInfoCustomer(id));
+	}
+
+	public CustomerServiceData insertFullInfoCustomer(CustomerServiceData customer) {
+		CustomerServiceData customerSave = null;
+		if (customer.getType() != null && customer.getValue() != null) {
+			DocumentServiceData document = new DocumentServiceData();
+			document.setType(customer.getType());
+			document.setValue(customer.getValue());
+			customerSave = create(customer);
+			if (customerSave != null) {
+				document.setIdCustomer(customerSave.getId());
+				DocumentServiceData documentSave = documentService.create(document);
+				customerSave.setIdDocument(document.getId());
+				customerSave.setType(documentSave.getType());
+				customerSave.setValue(documentSave.getValue());
+			}
+		}
+		return customerSave;
 	}
 
 }

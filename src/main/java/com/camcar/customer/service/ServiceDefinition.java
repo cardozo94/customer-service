@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ServiceDefinition<T> {
 
-	boolean create(T entity);
+	T create(T entity);
 	boolean update(int id, T entity);
 	boolean delete(int id);
 	T selectById(int id);

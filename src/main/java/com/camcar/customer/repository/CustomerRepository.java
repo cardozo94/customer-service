@@ -15,10 +15,10 @@ import com.camcar.customer.repository.dto.CustomerDocumentData;
 //@Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-	@Transactional
-	@Modifying
-	@Query(value = "INSERT INTO customers (name, address, phone_number) VALUES (:#{#customer.name}, :#{#customer.address}, :#{#customer.phoneNumber})", nativeQuery = true)
-	void insertCustomer(@Param("customer") Customer customer);
+//	@Transactional
+//	@Modifying
+//	@Query(value = "INSERT INTO customers (name, address, phone_number) VALUES (:#{#customer.name}, :#{#customer.address}, :#{#customer.phoneNumber})", nativeQuery = true)
+//	void insertCustomer(@Param("customer") Customer customer);
 
 	@Transactional
 	@Modifying
