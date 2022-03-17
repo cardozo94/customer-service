@@ -8,14 +8,17 @@
 		<version>2.6.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	
 	<groupId>globant.camcar</groupId>
 	<artifactId>customer-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>customer-service</name>
 	<description>Projecto to consolidate concepts</description>
+	
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -52,12 +55,33 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
+		<!-- pluginManagement-->
+			<plugins>
+				<plugin>
+	          		<artifactId>exec-maven-plugin</artifactId>
+	          		<version>3.0.0</version>
+	          		<groupId>org.codehaus.mojo</groupId>
+	          		<executions>
+	           	    	<execution>
+	              			<id>Run Containers</id>
+	              			<phase>process-resources</phase>
+	              			<configuration>
+	                   			<executable>docker-compose</executable>
+	                   			<workingDirectory>${basedir}/docker/</workingDirectory>
+	                     		<commandlineArgs>up --detach</commandlineArgs>
+	                 		</configuration>
+	              			<goals>
+	                			<goal>exec</goal>
+	              			</goals>
+	            		</execution>
+	        		</executions>
+	        	</plugin>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+			</plugins>
+		<!-- /pluginManagement-->	
 	</build>
 
 </project>
