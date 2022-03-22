@@ -2,8 +2,8 @@ package com.camcar.customer.service.converters;
 
 import org.springframework.core.convert.converter.Converter;
 
-import com.camcar.customer.model.Customer;
-import com.camcar.customer.model.Document;
+import com.camcar.customer.repository.model.Customer;
+import com.camcar.customer.repository.model.Document;
 import com.camcar.customer.service.dto.DocumentServiceData;
 
 public class DocumentConverter implements Converter<DocumentServiceData, Document> {

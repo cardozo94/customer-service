@@ -1,7 +1,7 @@
 package com.camcar.customer.repository.dto;
 
-import com.camcar.customer.model.Customer;
-import com.camcar.customer.model.Document;
+import com.camcar.customer.repository.model.Customer;
+import com.camcar.customer.repository.model.Document;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

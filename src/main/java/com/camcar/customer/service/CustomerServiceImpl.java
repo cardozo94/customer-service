@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.camcar.customer.model.Customer;
 import com.camcar.customer.repository.CustomerRepository;
+import com.camcar.customer.repository.model.Customer;
 import com.camcar.customer.service.converters.CustomerConverter;
 import com.camcar.customer.service.converters.CustomerServiceConverter;
 import com.camcar.customer.service.converters.DocumentToCustomerConverter;

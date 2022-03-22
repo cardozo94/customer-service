@@ -12,10 +12,15 @@ public class CustomerResponseConverter implements Converter<CustomerServiceData,
 	@Override
 	public CustomerResponse convert(CustomerServiceData customerSource) {
 		CustomerResponse customer = null;
-		if (customerSource != null)
+		if (customerSource != null) {
+//			CustomerResponse.builder()
+//			.id(customer.getId())
+//			
+//			.build();
 			customer = new CustomerResponse(customerSource.getId(), customerSource.getName(),
 					customerSource.getAddress(), customerSource.getPhoneNumber(), customerSource.getType(),
 					customerSource.getValue());
+		}
 		return customer;
 	}
 

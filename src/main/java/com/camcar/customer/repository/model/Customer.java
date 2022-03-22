@@ -1,4 +1,4 @@
-package com.camcar.customer.model;
+package com.camcar.customer.repository.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

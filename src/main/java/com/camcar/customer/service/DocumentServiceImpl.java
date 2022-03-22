@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.camcar.customer.model.Document;
 import com.camcar.customer.repository.DocumentRepository;
+import com.camcar.customer.repository.model.Document;
 import com.camcar.customer.service.converters.DocumentConverter;
 import com.camcar.customer.service.converters.DocumentServiceConverter;
 import com.camcar.customer.service.dto.DocumentServiceData;

@@ -80,18 +80,18 @@ public class CustomerController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
 	}
 
-	@GetMapping("/full")
+	@GetMapping("/documentInfo")
 	public List<CustomerResponse> getAllCustomersInfo() {
 		return ((CustomerServiceImpl) customerService).selectAllInfoFromAllCustomers().stream()
 				.map(customer -> converterRsp.convert(customer)).toList();
 	}
 
-	@GetMapping("/full/{id}")
+	@GetMapping("/documentInfo/{id}")
 	public CustomerResponse getAllInfoCustomer(@PathVariable("id") int id) {
 		return converterRsp.convert(((CustomerServiceImpl) customerService).selectAllInfoCustomer(id));
 	}
 
-	@PostMapping("/full")
+	@PostMapping("/documentInfo")
 	@ResponseStatus(HttpStatus.CREATED)
 	public CustomerResponse createCustomerWithAllInfo(@RequestBody CustomerRequest customerReq) {
 		CustomerResponse customer = converterRsp.convert(
