@@ -46,7 +46,7 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 			customerData.setName(customer.getName());
 			customerData.setAddress(customer.getAddress());
 			customerData.setPhoneNumber(customer.getPhoneNumber());
-			customerRepository.updateCustomer(customerData);
+			customerRepository.save(customerData);
 			result = true;
 		}
 		return result;
@@ -59,7 +59,7 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 			for (DocumentServiceData document : documentService.selectByCustomerId(id)) {
 				documentService.delete(document.getId());
 			}
-			customerRepository.deleteCustomer(id);
+			customerRepository.delete(customerRepository.findById(id));
 			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
