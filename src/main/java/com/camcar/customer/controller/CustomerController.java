@@ -38,11 +38,10 @@ public class CustomerController {
 	@GetMapping("/test")
 	public String test() {
 
-		CustomerRequest customer = new CustomerRequest();
-//		customer.setId(1);
-		customer.setName("Camilo");
-		customer.setAddress("Carrera 14 # 9 -62");
-		customer.setPhoneNumber("3105504647");
+		CustomerRequest customer = CustomerRequest.builder()
+				.name("Camilo")
+				.address("Carrera 14 # 9 -62")
+				.phoneNumber("3105504647").build();
 		return customer.getName();
 	}
 
@@ -88,7 +87,11 @@ public class CustomerController {
 
 	@GetMapping("/documentInfo/{id}")
 	public CustomerResponse getAllInfoCustomer(@PathVariable("id") int id) {
-		return converterRsp.convert(((CustomerServiceImpl) customerService).selectAllInfoCustomer(id));
+		CustomerResponse customer =converterRsp.convert(((CustomerServiceImpl) customerService).selectAllInfoCustomer(id));
+		if(customer == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
+		}
+		return customer; 
 	}
 
 	@PostMapping("/documentInfo")

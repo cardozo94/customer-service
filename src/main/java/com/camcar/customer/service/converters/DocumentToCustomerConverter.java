@@ -12,14 +12,20 @@ public class DocumentToCustomerConverter implements Converter<CustomerDocumentDa
 		CustomerServiceData customer;
 		if (sourceDocument != null)
 			if (sourceDocument.getDocument() != null)
-				customer = new CustomerServiceData(sourceDocument.getCustomer().getId(),
-						sourceDocument.getCustomer().getName(), sourceDocument.getCustomer().getAddress(),
-						sourceDocument.getCustomer().getPhoneNumber(), sourceDocument.getDocument().getId(),
-						sourceDocument.getDocument().getType(), sourceDocument.getDocument().getValue());
+				customer = CustomerServiceData.builder()
+					.id(sourceDocument.getCustomer().getId())
+					.name(sourceDocument.getCustomer().getName())
+					.address(sourceDocument.getCustomer().getAddress())
+					.phoneNumber(sourceDocument.getCustomer().getPhoneNumber())
+					.idDocument(sourceDocument.getDocument().getId())
+					.type(sourceDocument.getDocument().getType())
+					.value(sourceDocument.getDocument().getValue()).build();
 			else
-				customer = new CustomerServiceData(sourceDocument.getCustomer().getId(),
-						sourceDocument.getCustomer().getName(), sourceDocument.getCustomer().getAddress(),
-						sourceDocument.getCustomer().getPhoneNumber());
+				customer = CustomerServiceData.builder()
+					.id(sourceDocument.getCustomer().getId())
+					.name(sourceDocument.getCustomer().getName())
+					.address(sourceDocument.getCustomer().getAddress())
+					.phoneNumber(sourceDocument.getCustomer().getPhoneNumber()).build();
 		else {
 			customer = null;
 		}

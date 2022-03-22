@@ -9,12 +9,11 @@ public class CustomerServiceConverter implements Converter<Customer, CustomerSer
 
 	@Override
 	public CustomerServiceData convert(Customer customerSource) {
-		CustomerServiceData customer = new CustomerServiceData();
-		customer.setId(customerSource.getId());
-		customer.setName(customerSource.getName());
-		customer.setAddress(customerSource.getAddress());
-		customer.setPhoneNumber(customerSource.getPhoneNumber());
-		return customer;
+		return CustomerServiceData.builder()
+				.id(customerSource.getId())
+				.name(customerSource.getName())
+				.address(customerSource.getAddress())
+				.phoneNumber(customerSource.getPhoneNumber()).build();
 	}
 	
 

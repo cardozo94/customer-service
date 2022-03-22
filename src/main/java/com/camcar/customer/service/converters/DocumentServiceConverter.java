@@ -11,8 +11,11 @@ public class DocumentServiceConverter implements Converter<Document, DocumentSer
 	public DocumentServiceData convert(Document sourceDocument) {
 		DocumentServiceData document;
 		if(sourceDocument != null)
-			document = new DocumentServiceData(sourceDocument.getId(), sourceDocument.getType(), sourceDocument.getValue(),
-					sourceDocument.getCustomer().getId());
+			document = DocumentServiceData.builder()
+				.id(sourceDocument.getId())
+				.type(sourceDocument.getType())
+				.value(sourceDocument.getValue())
+				.idCustomer(sourceDocument.getCustomer().getId()).build();
 		else
 			document = null;
 		return document;

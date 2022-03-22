@@ -3,13 +3,11 @@ package com.camcar.customer.repository.dto;
 import com.camcar.customer.repository.model.Customer;
 import com.camcar.customer.repository.model.Document;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
+@Builder
 public class CustomerDocumentData {
 	
 	private Customer customer;

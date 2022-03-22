@@ -30,15 +30,15 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	@Query(value = "DELETE FROM customers WHERE id = :id", nativeQuery = true)
 	void deleteCustomer(@Param("id") int id);
 
-	@Query(value = "SELECT * FROM customers WHERE id = :id", nativeQuery = true)
+	@Query(value = Queries.SELECT_CUSTOMER_BY_ID, nativeQuery = true)
 	Customer findById(@Param("id") int id);
 
-	@Query("SELECT c FROM customers c")
+	@Query(Queries.SELECT_CUSTOMERS)
 	List<Customer> selectAllCustomers();
 	
-	@Query("SELECT new com.camcar.customer.repository.dto.CustomerDocumentData(c, d) FROM documents d RIGHT JOIN d.customer c")
+	@Query(Queries.SELECT_RIGHT_JOIN_DOCUMENT_CUSTOMER)
 	List<CustomerDocumentData> selectAllInfoForAllCustomers();
 	
-	@Query("SELECT new com.camcar.customer.repository.dto.CustomerDocumentData(c, d) FROM documents d RIGHT JOIN d.customer c WHERE c.id = :idCustomer")
+	@Query(Queries.SELECT_RIGHT_JOIN_DOCUMENT_CUSTOMER_BY_CUSTOMER_ID)
 	CustomerDocumentData findByIdAllInfoCustomer(@Param("idCustomer") int id);
 }

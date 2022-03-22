@@ -1,14 +1,10 @@
 package com.camcar.customer.service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Builder
 public class CustomerServiceData {
 
 	private int id;
@@ -18,12 +14,5 @@ public class CustomerServiceData {
 	private int idDocument;
 	private String type;
 	private String value;	
-
-	public CustomerServiceData(int id, String name, String address, String phoneNumber){
-		this.id = id;
-		this.name = name;
-		this.address = address;
-		this.phoneNumber = phoneNumber;
-	}
 	
 }

@@ -74,7 +74,11 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 		if (customerRepo != null)
 			customer = converterToCustomerService.convert(customerRepo);
 		else
-			customer = new CustomerServiceData(0, "Not found", "-", "-");
+			customer = CustomerServiceData.builder()
+			.id(0)
+			.name("Not Found")
+			.address("-")
+			.phoneNumber("-").build();
 		return customer;
 	}
 
@@ -96,9 +100,9 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 	public CustomerServiceData insertFullInfoCustomer(CustomerServiceData customer) {
 		CustomerServiceData customerSave = null;
 		if (customer.getType() != null && customer.getValue() != null) {
-			DocumentServiceData document = new DocumentServiceData();
-			document.setType(customer.getType());
-			document.setValue(customer.getValue());
+			DocumentServiceData document = DocumentServiceData.builder()
+					.type(customer.getType())
+					.value(customer.getValue()).build();
 			customerSave = create(customer);
 			if (customerSave != null) {
 				document.setIdCustomer(customerSave.getId());

@@ -8,11 +8,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Data;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @Entity(name="documents")
 public class Document {
 	

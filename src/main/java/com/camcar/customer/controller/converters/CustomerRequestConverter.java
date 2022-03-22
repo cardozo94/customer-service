@@ -11,13 +11,12 @@ public class CustomerRequestConverter implements Converter<CustomerRequest, Cust
 
 	@Override
 	public CustomerServiceData convert(CustomerRequest customerSource) {
-		CustomerServiceData customer = new CustomerServiceData();
-		customer.setName(customerSource.getName());
-		customer.setAddress(customerSource.getAddress());
-		customer.setPhoneNumber(customerSource.getPhoneNumber());
-		customer.setType(customerSource.getType());
-		customer.setValue(customerSource.getValue());
-		return customer;
+		return CustomerServiceData.builder()
+				.name(customerSource.getName())
+				.address(customerSource.getAddress())
+				.phoneNumber(customerSource.getPhoneNumber())
+				.type(customerSource.getType())
+				.value(customerSource.getValue()).build();
 	}
 
 }

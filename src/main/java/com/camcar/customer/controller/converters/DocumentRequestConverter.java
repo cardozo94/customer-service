@@ -9,11 +9,10 @@ public class DocumentRequestConverter implements Converter<DocumentRequest, Docu
 
 	@Override
 	public DocumentServiceData convert(DocumentRequest sourceDocument) {
-		DocumentServiceData document = new DocumentServiceData();
-		document.setType(sourceDocument.getType());
-		document.setValue(sourceDocument.getValue());
-		document.setIdCustomer(sourceDocument.getIdCustomer());
-		return document;
+		return DocumentServiceData.builder()
+				.type(sourceDocument.getType())
+				.value(sourceDocument.getValue())
+				.idCustomer(sourceDocument.getIdCustomer()).build();
 	}
 
 }

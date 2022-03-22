@@ -13,7 +13,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
 	
 	Document findById(int id);
 	
-	@Query("SELECT d FROM documents d WHERE id_customer = :idCustomer")
+	@Query(Queries.SELECT_DOCUMENTS_BY_CUSTOMER_ID)
 	List<Document> findByCustomerId(int idCustomer);
 
 }
