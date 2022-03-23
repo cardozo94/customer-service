@@ -7,12 +7,11 @@ import java.util.stream.Collectors;
 
 //import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import com.camcar.customer.repository.CustomerRepository;
 import com.camcar.customer.repository.model.Customer;
-import com.camcar.customer.service.converters.CustomerConverter;
-import com.camcar.customer.service.converters.CustomerServiceConverter;
 import com.camcar.customer.service.dto.CustomerServiceData;
 import com.camcar.customer.service.dto.DocumentServiceData;
 
@@ -24,14 +23,17 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 	@Autowired
 	private DocumentServiceImpl documentService;
 //	private ModelMapper mapper = new ModelMapper();
-	private CustomerServiceConverter converterToCustomerService = new CustomerServiceConverter();
-	private CustomerConverter conterterToCustomer = new CustomerConverter();
+	@Autowired
+	private ConversionService converter;
+//	private CustomerServiceConverter converterToCustomerService = new CustomerServiceConverter();
+//	private CustomerConverter conterterToCustomer = new CustomerConverter();
 
 	@Override
 	public CustomerServiceData create(CustomerServiceData customer) {
 		CustomerServiceData result = null;
 		try {
-			result = converterToCustomerService.convert(customerRepository.save(conterterToCustomer.convert(customer)));
+			result = converter.convert(customerRepository.save(converter.convert(customer, Customer.class)),
+					CustomerServiceData.class);
 
 		} catch (IllegalArgumentException e) {
 		}
@@ -72,36 +74,30 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 		Customer customerRepo = customerRepository.findById(id);
 		CustomerServiceData customer;
 		if (customerRepo != null)
-			customer = converterToCustomerService.convert(customerRepo);
+			customer = converter.convert(customerRepo, CustomerServiceData.class);
 		else
-			customer = CustomerServiceData.builder()
-			.id(0)
-			.name("Not Found")
-			.address("-")
-			.phoneNumber("-").build();
+			customer = CustomerServiceData.builder().id(0).name("Not Found").address("-").phoneNumber("-").build();
 		return customer;
 	}
 
 	@Override
 	public List<CustomerServiceData> selectAll() {
 		return customerRepository.selectAllCustomers().stream()
-				.map(customer -> converterToCustomerService.convert(customer)).collect(Collectors.toList());
+				.map(customer -> converter.convert(customer, CustomerServiceData.class)).collect(Collectors.toList());
 	}
 
 	public List<CustomerServiceData> selectAllInfoFromAllCustomers() {
 		return customerRepository.selectAllInfoForAllCustomers().stream()
-				.map(customer -> converterToCustomerService.convert(customer)).toList();
+				.map(customer -> converter.convert(customer, CustomerServiceData.class)).toList();
 	}
 
 	public CustomerServiceData selectAllInfoCustomer(int id) {
-		Customer customer = customerRepository.findByIdAllInfoCustomer(id);
-		System.out.println(customer);
-		return converterToCustomerService.convert(customer);
+		return converter.convert(customerRepository.findByIdAllInfoCustomer(id), CustomerServiceData.class);
 	}
 
 	public CustomerServiceData insertFullInfoCustomer(CustomerServiceData customer) {
 		CustomerServiceData customerSave = null;
-		List<DocumentServiceData> documents = customer.getDocuments(); 
+		List<DocumentServiceData> documents = customer.getDocuments();
 		if (documents != null) {
 			customerSave = create(customer);
 			if (customerSave != null) {
@@ -110,8 +106,8 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 					DocumentServiceData document = iterator.next();
 					document.setIdCustomer(customerSave.getId());
 					documentsSave.add(documentService.create(document));
-				}		
-				customerSave.setDocuments(documentsSave);				 
+				}
+				customerSave.setDocuments(documentsSave);
 			}
 		}
 		return customerSave;

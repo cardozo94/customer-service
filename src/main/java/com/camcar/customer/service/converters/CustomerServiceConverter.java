@@ -3,11 +3,13 @@ package com.camcar.customer.service.converters;
 import java.util.List;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import com.camcar.customer.repository.model.Customer;
 import com.camcar.customer.repository.model.Document;
 import com.camcar.customer.service.dto.CustomerServiceData;
 
+@Component
 public class CustomerServiceConverter implements Converter<Customer, CustomerServiceData> {
 
 	@Override

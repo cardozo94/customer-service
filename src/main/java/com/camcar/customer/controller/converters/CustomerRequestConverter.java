@@ -1,11 +1,12 @@
 package com.camcar.customer.controller.converters;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import com.camcar.customer.controller.dto.CustomerRequest;
 import com.camcar.customer.service.dto.CustomerServiceData;
 
-//@Component --> para el converterService
+@Component //--> para el converterService
 public class CustomerRequestConverter implements Converter<CustomerRequest, CustomerServiceData> {
 
 	@Override

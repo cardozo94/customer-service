@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 //import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.camcar.customer.controller.converters.CustomerRequestConverter;
-import com.camcar.customer.controller.converters.CustomerResponseConverter;
 import com.camcar.customer.controller.dto.CustomerRequest;
 import com.camcar.customer.controller.dto.CustomerResponse;
 import com.camcar.customer.service.CustomerServiceImpl;
@@ -32,15 +31,15 @@ public class CustomerController {
 	@Autowired
 	private ServiceDefinition<CustomerServiceData> customerService;
 //	private ModelMapper mapper = new ModelMapper();
-	private CustomerRequestConverter converterReq = new CustomerRequestConverter();
-	private CustomerResponseConverter converterRsp = new CustomerResponseConverter();
+	@Autowired
+	private ConversionService converter;
+//	private CustomerRequestConverter converterReq = new CustomerRequestConverter();
+//	private CustomerResponseConverter converterRsp = new CustomerResponseConverter();
 
 	@GetMapping("/test")
 	public String test() {
 
-		CustomerRequest customer = CustomerRequest.builder()
-				.name("Camilo")
-				.address("Carrera 14 # 9 -62")
+		CustomerRequest customer = CustomerRequest.builder().name("Camilo").address("Carrera 14 # 9 -62")
 				.phoneNumber("3105504647").build();
 		return customer.getName();
 	}
@@ -48,25 +47,26 @@ public class CustomerController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CustomerResponse createCustomer(@RequestBody CustomerRequest customerReq) {
-		return converterRsp.convert(customerService.create(converterReq.convert(customerReq)));
+		return converter.convert(customerService.create(converter.convert(customerReq, CustomerServiceData.class)),
+				CustomerResponse.class);
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updateCustomer(@PathVariable("id") int id, @RequestBody CustomerRequest customerReq) {
-		if (!customerService.update(id, converterReq.convert(customerReq)))
+		if (!customerService.update(id, converter.convert(customerReq, CustomerServiceData.class)))
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
 	}
 
 	@GetMapping
 	public List<CustomerResponse> getAllCustomers() {
-		return customerService.selectAll().stream().map(customer -> converterRsp.convert(customer))
+		return customerService.selectAll().stream().map(customer -> converter.convert(customer, CustomerResponse.class))
 				.collect(Collectors.toList());
 	}
 
 	@GetMapping("/{id}")
 	public CustomerResponse getCustomerById(@PathVariable("id") int id) {
-		CustomerResponse customer = converterRsp.convert(customerService.selectById(id));
+		CustomerResponse customer = converter.convert(customerService.selectById(id), CustomerResponse.class);
 		if (customer.getId() == 0)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
 		return customer;
@@ -82,24 +82,25 @@ public class CustomerController {
 	@GetMapping("/documentInfo")
 	public List<CustomerResponse> getAllCustomersInfo() {
 		return ((CustomerServiceImpl) customerService).selectAllInfoFromAllCustomers().stream()
-				.map(customer -> converterRsp.convert(customer)).toList();
+				.map(customer -> converter.convert(customer, CustomerResponse.class)).toList();
 	}
 
 	@GetMapping("/documentInfo/{id}")
 	public CustomerResponse getAllInfoCustomer(@PathVariable("id") int id) {
-		CustomerResponse customer =converterRsp.convert(((CustomerServiceImpl) customerService).selectAllInfoCustomer(id));
-		if(customer == null) {
+		CustomerResponse customer = converter.convert(((CustomerServiceImpl) customerService).selectAllInfoCustomer(id),
+				CustomerResponse.class);
+		if (customer == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
 		}
-		return customer; 
+		return customer;
 	}
 
 	@PostMapping("/documentInfo")
 	@ResponseStatus(HttpStatus.CREATED)
 	public CustomerResponse createCustomerWithAllInfo(@RequestBody CustomerRequest customerReq) {
-		CustomerResponse customer = converterRsp.convert(
-				((CustomerServiceImpl) customerService).insertFullInfoCustomer(converterReq.convert(customerReq)));
-		if(customer == null)
+		CustomerResponse customer = converter.convert(((CustomerServiceImpl) customerService).insertFullInfoCustomer(
+				converter.convert(customerReq, CustomerServiceData.class)), CustomerResponse.class);
+		if (customer == null)
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Info is not correct.");
 		return customer;
 	}
