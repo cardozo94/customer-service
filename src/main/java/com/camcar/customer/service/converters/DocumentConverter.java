@@ -15,7 +15,7 @@ public class DocumentConverter implements Converter<DocumentServiceData, Documen
 		document.setValue(documentSource.getValue());
 		Customer customer = new Customer();
 		customer.setId(documentSource.getIdCustomer());
-		document.setCustomer(customer);
+		document.setIdCustomer(customer.getId());
 		return document;
 	}
 

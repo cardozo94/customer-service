@@ -1,5 +1,7 @@
 package com.camcar.customer.service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +13,6 @@ import com.camcar.customer.repository.CustomerRepository;
 import com.camcar.customer.repository.model.Customer;
 import com.camcar.customer.service.converters.CustomerConverter;
 import com.camcar.customer.service.converters.CustomerServiceConverter;
-import com.camcar.customer.service.converters.DocumentToCustomerConverter;
 import com.camcar.customer.service.dto.CustomerServiceData;
 import com.camcar.customer.service.dto.DocumentServiceData;
 
@@ -25,7 +26,6 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 //	private ModelMapper mapper = new ModelMapper();
 	private CustomerServiceConverter converterToCustomerService = new CustomerServiceConverter();
 	private CustomerConverter conterterToCustomer = new CustomerConverter();
-	private DocumentToCustomerConverter converterFromDocument = new DocumentToCustomerConverter();
 
 	@Override
 	public CustomerServiceData create(CustomerServiceData customer) {
@@ -90,26 +90,28 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 
 	public List<CustomerServiceData> selectAllInfoFromAllCustomers() {
 		return customerRepository.selectAllInfoForAllCustomers().stream()
-				.map(customer -> converterFromDocument.convert(customer)).toList();
+				.map(customer -> converterToCustomerService.convert(customer)).toList();
 	}
 
 	public CustomerServiceData selectAllInfoCustomer(int id) {
-		return converterFromDocument.convert(customerRepository.findByIdAllInfoCustomer(id));
+		Customer customer = customerRepository.findByIdAllInfoCustomer(id);
+		System.out.println(customer);
+		return converterToCustomerService.convert(customer);
 	}
 
 	public CustomerServiceData insertFullInfoCustomer(CustomerServiceData customer) {
 		CustomerServiceData customerSave = null;
-		if (customer.getType() != null && customer.getValue() != null) {
-			DocumentServiceData document = DocumentServiceData.builder()
-					.type(customer.getType())
-					.value(customer.getValue()).build();
+		List<DocumentServiceData> documents = customer.getDocuments(); 
+		if (documents != null) {
 			customerSave = create(customer);
 			if (customerSave != null) {
-				document.setIdCustomer(customerSave.getId());
-				DocumentServiceData documentSave = documentService.create(document);
-				customerSave.setIdDocument(document.getId());
-				customerSave.setType(documentSave.getType());
-				customerSave.setValue(documentSave.getValue());
+				List<DocumentServiceData> documentsSave = new ArrayList<>();
+				for (Iterator<DocumentServiceData> iterator = documents.iterator(); iterator.hasNext();) {
+					DocumentServiceData document = iterator.next();
+					document.setIdCustomer(customerSave.getId());
+					documentsSave.add(documentService.create(document));
+				}		
+				customerSave.setDocuments(documentsSave);				 
 			}
 		}
 		return customerSave;

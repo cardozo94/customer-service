@@ -4,8 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -21,8 +19,8 @@ public class Document {
 	private int id;
 	private String type;
 	private String value;
-	@ManyToOne(targetEntity = Customer.class)
-	@JoinColumn(name = "id_customer")
-	private Customer customer;
+//	@ManyToOne(targetEntity = Customer.class)
+//	@JoinColumn(name = "id_customer")
+	private int idCustomer;
 
 }

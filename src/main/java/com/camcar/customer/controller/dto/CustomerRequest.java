@@ -1,5 +1,7 @@
 package com.camcar.customer.controller.dto;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +12,6 @@ public class CustomerRequest {
 	private String name;
 	private String address;
 	private String phoneNumber;
-	private String type;
-	private String value;
+	private List<DocumentRequest> documents;
 
 }

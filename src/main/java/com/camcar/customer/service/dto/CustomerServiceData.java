@@ -1,5 +1,7 @@
 package com.camcar.customer.service.dto;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,8 +13,6 @@ public class CustomerServiceData {
 	private String name;
 	private String address;
 	private String phoneNumber;
-	private int idDocument;
-	private String type;
-	private String value;	
+	private List<DocumentServiceData> documents;
 	
 }

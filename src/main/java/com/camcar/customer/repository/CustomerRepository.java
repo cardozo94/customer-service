@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.camcar.customer.repository.dto.CustomerDocumentData;
 import com.camcar.customer.repository.model.Customer;
 
 //@Repository
@@ -35,8 +34,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	List<Customer> selectAllCustomers();
 	
 	@Query(Queries.SELECT_RIGHT_JOIN_DOCUMENT_CUSTOMER)
-	List<CustomerDocumentData> selectAllInfoForAllCustomers();
+	List<Customer> selectAllInfoForAllCustomers();
 	
-	@Query(Queries.SELECT_RIGHT_JOIN_DOCUMENT_CUSTOMER_BY_CUSTOMER_ID)
-	CustomerDocumentData findByIdAllInfoCustomer(@Param("idCustomer") int id);
+	@Query(Queries.SELECT_LEFT_JOIN_DOCUMENT_CUSTOMER_BY_CUSTOMER_ID)
+	Customer findByIdAllInfoCustomer(@Param("idCustomer") int id);
 }

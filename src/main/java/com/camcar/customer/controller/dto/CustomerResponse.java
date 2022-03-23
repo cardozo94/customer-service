@@ -1,5 +1,7 @@
 package com.camcar.customer.controller.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -16,6 +18,5 @@ public class CustomerResponse {
 	private String name;
 	private String address;
 	private String phoneNumber;
-	private String type;
-	private String value;
+	private List<DocumentResponse> documents;
 }

@@ -15,7 +15,8 @@ public class DocumentResponseConverter implements Converter<DocumentServiceData,
 				.id(sourceDocument.getId())
 				.type(sourceDocument.getType())
 				.value(sourceDocument.getValue())
-				.idCustomer(sourceDocument.getIdCustomer()).build();
+//				.idCustomer(sourceDocument.getIdCustomer())
+				.build();
 		else
 			document = null;
 		return document;

@@ -10,6 +10,6 @@ public class DocumentResponse {
 	private int id;
 	private String type;
 	private String value;
-	private int idCustomer;
+//	private int idCustomer;
 
 }
