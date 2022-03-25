@@ -3,8 +3,8 @@ package com.camcar.customer.app;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.camcar.customer.app.converters.CustomerRequestConverter;
-import com.camcar.customer.app.converters.CustomerResponseConverter;
 import com.camcar.customer.app.dto.CustomerRequest;
 import com.camcar.customer.app.dto.CustomerResponse;
 import com.camcar.customer.domain.Customers;
-import com.camcar.customer.domain.service.CustomerService;
+import com.camcar.customer.domain.service.CustomerServiceImpl;
+import com.camcar.customer.domain.service.ServiceDefinition;
 import com.camcar.customer.domain.service.dto.CustomerServiceDto;
 
 @RestController
@@ -30,10 +29,9 @@ import com.camcar.customer.domain.service.dto.CustomerServiceDto;
 public class CustomerController {
 
 	@Autowired
-	private CustomerService customerService;
-//	private ModelMapper mapper = new ModelMapper();
-	private CustomerRequestConverter converterReq = new CustomerRequestConverter();
-	private CustomerResponseConverter converterRsp = new CustomerResponseConverter();
+	private ServiceDefinition<CustomerServiceDto> customerService;
+	@Autowired
+	private ConversionService converter;
 
 	@GetMapping("/test")
 	public String test() {
@@ -48,27 +46,27 @@ public class CustomerController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public boolean createCustomer(@RequestBody CustomerRequest customer) {
-		return customerService.createCustomer(converterReq.convert(customer));
+	public CustomerResponse createCustomer(@RequestBody CustomerRequest customer) {
+		return converter.convert(customerService.create(converter.convert(customer, CustomerServiceDto.class)), CustomerResponse.class);
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updateCustomer(@PathVariable("id") int id, @RequestBody CustomerRequest customer) {
-		if (!customerService.updateCustomer(id, converterReq.convert(customer)))
+		if (!customerService.update(id, converter.convert(customer, CustomerServiceDto.class)))
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer Not Found");
 	}
 
 	@GetMapping
 	public List<CustomerResponse> getAllCustomers() {
-		return customerService.selectAllCustomers().stream().map(customer -> converterRsp.convert(customer))
-				.collect(Collectors.toList());
+		return customerService.selectAll().stream()
+				.map(customer -> converter.convert(customer, CustomerResponse.class)).collect(Collectors.toList());
 	}
 
 	@GetMapping("/{id}")
 	public CustomerResponse getCustomerById(@PathVariable("id") int id) {
-		CustomerResponse customer = converterRsp.convert(customerService.selectCustomerById(id));
-		if (customer.getId() == 0)
+		CustomerResponse customer = converter.convert(customerService.selectById(id), CustomerResponse.class);
+		if (customer == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer Not Found");
 		return customer;
 	}
@@ -76,7 +74,33 @@ public class CustomerController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteCustomer(@PathVariable("id") int id) {
-		if (!customerService.deleteCustomer(id))
+		if (!customerService.delete(id))
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer Not Found");
+	}
+	
+	@GetMapping("/documentInfo")
+	public List<CustomerResponse> getAllCustomersInfo() {
+		return ((CustomerServiceImpl) customerService).selectAllInfoFromAllCustomers().stream()
+				.map(customer -> converter.convert(customer, CustomerResponse.class)).toList();
+	}
+
+	@GetMapping("/documentInfo/{id}")
+	public CustomerResponse getAllInfoCustomer(@PathVariable("id") int id) {
+		CustomerResponse customer = converter.convert(((CustomerServiceImpl) customerService).selectAllInfoCustomer(id),
+				CustomerResponse.class);
+		if (customer == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
+		}
+		return customer;
+	}
+
+	@PostMapping("/documentInfo")
+	@ResponseStatus(HttpStatus.CREATED)
+	public CustomerResponse createCustomerWithAllInfo(@RequestBody CustomerRequest customerReq) {
+		CustomerResponse customer = converter.convert(((CustomerServiceImpl) customerService).insertFullInfoCustomer(
+				converter.convert(customerReq, CustomerServiceDto.class)), CustomerResponse.class);
+		if (customer == null)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Info is not correct.");
+		return customer;
 	}
 }

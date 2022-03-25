@@ -1,18 +1,17 @@
 package com.camcar.customer.app.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
 public class CustomerRequest {
 	
 	private String name;
 	private String address;
 	private String phoneNumber;
+	private List<DocumentRequest> documents;
 
 }
