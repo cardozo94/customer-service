@@ -1,5 +1,6 @@
 package com.camcar.customer.controller.events;
 
+import org.springframework.core.convert.ConverterNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,6 +36,13 @@ public class ExceptionsHandler {
 //		e.getStackTrace();
 		System.out.println("Exception s");
 //		if(e instanceof )
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	
+	@ExceptionHandler(value = {ConverterNotFoundException.class})
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<Object> handleConverterNotFoundException(ConverterNotFoundException e){
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
