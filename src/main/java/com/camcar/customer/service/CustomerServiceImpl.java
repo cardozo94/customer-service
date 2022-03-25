@@ -57,15 +57,18 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 	@Override
 	public boolean delete(int id) {
 		boolean result = false;
-		try {
-			for (DocumentServiceData document : documentService.selectByCustomerId(id)) {
+//		try {
+		List<DocumentServiceData> documents = documentService.selectByCustomerId(id);
+		if(!documents.isEmpty()) {
+			for (DocumentServiceData document : documents) {
 				documentService.delete(document.getId());
 			}
 			customerRepository.delete(customerRepository.findById(id));
 			result = true;
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return result;
 	}
 
@@ -73,10 +76,10 @@ public class CustomerServiceImpl implements ServiceDefinition<CustomerServiceDat
 	public CustomerServiceData selectById(int id) {
 		Customer customerRepo = customerRepository.findById(id);
 		CustomerServiceData customer;
-		if (customerRepo != null)
+//		if (customerRepo != null)
 			customer = converter.convert(customerRepo, CustomerServiceData.class);
-		else
-			customer = CustomerServiceData.builder().id(0).name("Not Found").address("-").phoneNumber("-").build();
+//		else
+//			customer = CustomerServiceData.builder().id(0).name("Not Found").address("-").phoneNumber("-").build();
 		return customer;
 	}
 

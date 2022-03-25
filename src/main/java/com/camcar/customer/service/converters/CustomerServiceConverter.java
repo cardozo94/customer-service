@@ -14,8 +14,7 @@ public class CustomerServiceConverter implements Converter<Customer, CustomerSer
 
 	@Override
 	public CustomerServiceData convert(Customer customerSource) {
-		
-		if(customerSource!= null) {
+//		if(customerSource!= null) {
 			CustomerServiceData.CustomerServiceDataBuilder customerBuilder = CustomerServiceData.builder()
 					.id(customerSource.getId())
 				.name(customerSource.getName())
@@ -27,9 +26,9 @@ public class CustomerServiceConverter implements Converter<Customer, CustomerSer
 			customerBuilder.documents(documents.stream().map(document -> documentConverter.convert(document)).toList());
 		}
 		return customerBuilder.build();
-		}
+//		}
 		
-		return null;
+//		return null;
 	}
 
 }

@@ -11,8 +11,7 @@ public class CustomerResponseConverter implements Converter<CustomerServiceData,
 
 	@Override
 	public CustomerResponse convert(CustomerServiceData customerSource) {
-
-		if (customerSource != null) {
+//		if (customerSource != null) {
 			DocumentResponseConverter documentConverter = new DocumentResponseConverter();
 			CustomerResponse.CustomerResponseBuilder customerBuilder = CustomerResponse.builder()
 					.id(customerSource.getId()).name(customerSource.getName()).address(customerSource.getAddress())
@@ -22,8 +21,8 @@ public class CustomerResponseConverter implements Converter<CustomerServiceData,
 						.map(document -> documentConverter.convert(document)).toList());
 			}
 			return customerBuilder.build();
-		}
-		return null;
+//		}
+//		return null;
 
 	}
 

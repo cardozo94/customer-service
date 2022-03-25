@@ -11,7 +11,6 @@ public class CustomerRequestConverter implements Converter<CustomerRequest, Cust
 
 	@Override
 	public CustomerServiceData convert(CustomerRequest customerSource) {
-
 		CustomerServiceData.CustomerServiceDataBuilder customerBuilder = CustomerServiceData.builder()
 				.name(customerSource.getName()).address(customerSource.getAddress())
 				.phoneNumber(customerSource.getPhoneNumber());

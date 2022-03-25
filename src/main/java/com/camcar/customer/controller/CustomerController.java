@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,11 +38,13 @@ public class CustomerController {
 //	private CustomerResponseConverter converterRsp = new CustomerResponseConverter();
 
 	@GetMapping("/test")
-	public String test() {
+	public ResponseEntity<String> test() throws Exception {
 
 		CustomerRequest customer = CustomerRequest.builder().name("Camilo").address("Carrera 14 # 9 -62")
 				.phoneNumber("3105504647").build();
-		return customer.getName();
+		if(customer.getName().equals("Camilo"))
+			throw new Exception();
+		return new ResponseEntity<String>(customer.getName(), HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -67,7 +70,7 @@ public class CustomerController {
 	@GetMapping("/{id}")
 	public CustomerResponse getCustomerById(@PathVariable("id") int id) {
 		CustomerResponse customer = converter.convert(customerService.selectById(id), CustomerResponse.class);
-		if (customer.getId() == 0)
+		if (customer == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not Found");
 		return customer;
 	}
