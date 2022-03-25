@@ -11,8 +11,18 @@ public class CustomerResponseConverter implements Converter<CustomerServiceDto, 
 
 	@Override
 	public CustomerResponse convert(CustomerServiceDto customerSource) {
-		return new CustomerResponse(customerSource.getId(), customerSource.getName(), customerSource.getAddress(),
-				customerSource.getPhoneNumber());
+//		if (customerSource != null) {
+			DocumentResponseConverter documentConverter = new DocumentResponseConverter();
+			CustomerResponse.CustomerResponseBuilder customerBuilder = CustomerResponse.builder()
+					.id(customerSource.getId()).name(customerSource.getName()).address(customerSource.getAddress())
+					.phoneNumber(customerSource.getPhoneNumber());
+			if (customerSource.getDocuments() != null) {
+				customerBuilder.documents(customerSource.getDocuments().stream()
+						.map(document -> documentConverter.convert(document)).toList());
+			}
+			return customerBuilder.build();
+//		}
+//		return null;
 	}
 
 }
